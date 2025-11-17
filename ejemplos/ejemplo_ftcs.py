@@ -1,5 +1,6 @@
 """Ejemplo de uso: FTCS para la ecuación de calor 2D"""
-
+import sys
+sys.path.append('./')
 import numpy as np
 import matplotlib.pyplot as plt
 from src.condiciones import inicializar_dominio, temperatura_inicial, aplicar_frontera_dirichlet

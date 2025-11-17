@@ -1,4 +1,6 @@
 """Test de convergencia: compara el error L2 a diferentes tamaños de malla y paso de tiempo."""
+import sys
+sys.path.append('./')
 import numpy as np
 from src.condiciones import inicializar_dominio, temperatura_inicial
 from src.solucionadores import resolver_ftcs
