@@ -1,9 +1,11 @@
 """
-tests/test_neumann.py - Validación Neumann (conservación de energía)
+tests/test_neumann.py - Validación Neumann (conservación de energía) con gráfico
+Ejemplo: Placa iny uno, frontera Neumann homogénea
 """
 import sys
 sys.path.append('./')
 import numpy as np
+import matplotlib.pyplot as plt
 from src.condiciones import inicializar_dominio, temperatura_inicial, aplicar_frontera_neumann
 from src.solucionadores import resolver_ftcs
 
@@ -23,3 +25,12 @@ if abs(energias[-1] - energias[0]) / energias[0] < 1e-6:
     print("Validación OK: Conservación de energía con Neumann")
 else:
     print("Advertencia: No se conserva la energía (posible error)")
+
+# Gráfico de energía en el tiempo
+plt.plot(energias)
+plt.title("Evolución de la energía (Neumann homogénea)")
+plt.xlabel("Paso de tiempo")
+plt.ylabel("Energía total")
+plt.grid()
+plt.tight_layout()
+plt.show()

@@ -1,14 +1,17 @@
 """
-utils/convergencia.py - Tabla L2 para validación de orden de convergencia
+utils/convergencia.py - Tabla L2 y gráfica para validación de orden
+Ejemplo: placa unidad, solución analítica seno.
 """
 import sys
 sys.path.append('./')
 import numpy as np
+import matplotlib.pyplot as plt
 from src.condiciones import inicializar_dominio, temperatura_inicial
 from src.solucionadores import resolver_ftcs
 from src.validacion import solucion_analitica, error_l2
 
 h_list = [0.05, 0.025, 0.0125]
+l2_errors = []
 print("h\tError_L2")
 
 for h in h_list:
@@ -20,4 +23,14 @@ for h in h_list:
     soluciones = resolver_ftcs(u0, dx, dy, dt, pasos)
     u_exact = solucion_analitica(x, y, dt*pasos, tipo='senoidal')
     err = error_l2(soluciones[-1], u_exact)
+    l2_errors.append(err)
     print(f"{h:.4f}\t{err:.2e}")
+
+plt.loglog(h_list, l2_errors, 'o-', label='Error L2')
+plt.title("Convergencia de FTCS (log-log)")
+plt.xlabel("h (paso espacial)")
+plt.ylabel("Error L2")
+plt.grid(True, which="both")
+plt.legend()
+plt.tight_layout()
+plt.show()
