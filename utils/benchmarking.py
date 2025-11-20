@@ -7,7 +7,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from src.solucionadores import resolver_ftcs, resolver_cn, resolver_adi
-from src.condiciones import condicion_inicial_seno
+
+
+def condicion_inicial_seno(X, Y):
+    """Condición inicial senoidal"""
+    return np.sin(np.pi * X) * np.sin(np.pi * Y)
 
 
 def solucion_exacta(X, Y, t, alpha=1.0):
