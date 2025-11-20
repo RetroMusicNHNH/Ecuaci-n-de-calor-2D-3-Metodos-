@@ -258,66 +258,49 @@ def graficar_resultados(resultados, escalabilidad, guardar=True):
     ax = axes[1, 1]
     if resultados['FTCS']['tiempos'] and len(resultados['FTCS']['tiempos']) > 0:
         tamaños = resultados['FTCS']['tamaños']
-        
         for metodo in ['Crank-Nicolson', 'ADI']:
             if resultados[metodo]['tiempos']:
-                eficiencia = [
-                    resultados['FTCS']['tiempos'][i] / resultados[metodo]['tiempos'][i]
-                    if i < len(resultados[metodo]['tiempos']) else 0
-                    for i in range(len(resultados['FTCS']['tiempos']))
-                ]
+                eficiencia = []
+                for i in range(len(resultados['FTCS']['tiempos'])):
+                    t_ftcs = resultados['FTCS']['tiempos'][i]
+                    t_comp = resultados[metodo]['tiempos'][i] if i < len(resultados[metodo]['tiempos']) else None
+                    if t_comp is not None and t_comp != 0:
+                        eficiencia.append(t_ftcs / t_comp)
+                    else:
+                        eficiencia.append(0)
                 ax.plot(tamaños, eficiencia, marker='d', label=f'{metodo} vs FTCS', linewidth=2)
-        
         ax.axhline(y=1.0, color='r', linestyle='--', label='Referencia (1.0)')
         ax.set_xlabel('Tamaño de malla N', fontsize=11)
         ax.set_ylabel('Eficiencia relativa', fontsize=11)
         ax.set_title('Eficiencia Relativa (FTCS como base)', fontsize=12, fontweight='bold')
         ax.legend()
         ax.grid(True, alpha=0.3)
-    
     plt.tight_layout()
-    
     if guardar:
         plt.savefig('benchmarking_resultados.png', dpi=300, bbox_inches='tight')
         print("\nGráficos guardados: benchmarking_resultados.png")
-    
     plt.show()
-
 
 def ejecutar_benchmarking_completo():
     """Ejecuta benchmarking completo y genera reportes"""
-    
-    # Configuración
     tamaños_benchmarking = [10, 20, 30, 40, 50]
     tamaños_escalabilidad = [10, 20, 40, 60, 80, 100]
-    
     print("=" * 60)
     print("BENCHMARKING Y ANALISIS DE ESCALABILIDAD")
     print("Ecuación de Calor 2D: FTCS, Crank-Nicolson, ADI")
     print("=" * 60)
-    
-    # Benchmarking de tiempo y precisión
     resultados = benchmarking_tiempo(tamaños_benchmarking)
-    
-    # Análisis de escalabilidad
     escalabilidad = analisis_escalabilidad(tamaños_escalabilidad)
-    
-    # Generar gráficos
     graficar_resultados(resultados, escalabilidad)
-    
-    # Resumen en consola
     print("\n" + "=" * 60)
     print("RESUMEN DE RESULTADOS")
     print("=" * 60)
-    
     for metodo in ['FTCS', 'Crank-Nicolson', 'ADI']:
         if resultados[metodo]['tiempos']:
             print(f"\n{metodo}:")
             print(f"  Tiempo promedio: {np.mean(resultados[metodo]['tiempos']):.4f} s")
             print(f"  Error promedio L2: {np.mean(resultados[metodo]['errores']):.2e}")
-    
     print("\n" + "=" * 60)
-
 
 if __name__ == "__main__":
     ejecutar_benchmarking_completo()
