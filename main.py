@@ -44,7 +44,7 @@ plt.tight_layout()
 plt.show()
 
 #------------------ Ejemplo real: placa caliente arriba, fría abajo ---------------#
-print("\n=== Ejemplo realista: placa con borde superior caliente ===")
+print("\n=== Ejemplo : placa con borde superior caliente ===")
 nx, ny = 60, 60
 x2, y2, dx2, dy2 = inicializar_dominio(nx, ny, 1.0, 1.0)
 u0_real = np.zeros((nx, ny))  # Todo frío
